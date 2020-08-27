@@ -119,9 +119,9 @@ C4Game >> dropChipAt: col State: state Val: val [
 			board at: row at: col put: val.
 			win := self getWinner.
 			win = 2
-				ifTrue: [ ^ false ].
+				ifTrue: [ self owner setLabel:'I win'. ^false ]. "I win"
 			win = 1
-				ifTrue: [ ^ false ].
+				ifTrue: [  self owner setLabel:'You win!'. ^ false ]. "You win!'"
 			^ true ].
 	^ false
 ]
@@ -152,7 +152,8 @@ C4Game >> initialize [
 	self bounds: (5@5 extent: ((width*cols)@(height *rows))+(2*self borderWidth )).
 	cells:=Array2D  rows:rows columns:cols tabulate:[:i :j | self newCellAt: i at: j ].
 	board:=Array2D  rows:rows columns:cols tabulate:[:i :j | 0]."element:0."
-	self openInWindowLabeled: 'Connect Four'
+	self openInWindowLabeled: 'Connect Four'.
+	self halt.
 ]
 
 { #category : #GameLogic }
@@ -163,10 +164,6 @@ C4Game >> isValidMove:col [
 row:=6.
 val:=board at:row at:col.
 ^(0=val).
-
-"cell:=cells at:row at:col.
-
-^(cell state=(Color paleYellow) ) "
 
 ]
 
