@@ -119,12 +119,9 @@ C4Game >> dropChipAt: col State: state Val: val [
 			board at: row at: col put: val.
 			win := self getWinner.
 			win = 2
-				ifTrue: [ Transcript open.
-					Transcript show: 'I win'.
-					^ false ].
+				ifTrue: [ ^ false ].
 			win = 1
-				ifTrue: [ Transcript show: 'You win'.
-					^ false ].
+				ifTrue: [ ^ false ].
 			^ true ].
 	^ false
 ]
