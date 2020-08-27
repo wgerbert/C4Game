@@ -96,7 +96,7 @@ C4Game >> dropChipAt: col [
 			board at: row at: col put: playerVal.
 			win := self getWinner.
 			win = 2
-				ifTrue: [  ].
+				ifTrue: [ self owner setLabel:'I win'.cells do:[:c|c state = Color paleYellow ifTrue:[c state:Color green.c color:Color green ]] ].
 			win = 1
 				ifTrue: [  ].
 			^ true ].
@@ -119,9 +119,15 @@ C4Game >> dropChipAt: col State: state Val: val [
 			board at: row at: col put: val.
 			win := self getWinner.
 			win = 2
-				ifTrue: [ self owner setLabel:'I win'. ^false ]. "I win"
+				ifTrue: [  ].	"I win"
 			win = 1
-				ifTrue: [  self owner setLabel:'You win!'. ^ false ]. "You win!'"
+				ifTrue: [ self owner setLabel: 'You win!'.
+					cells
+						do: [ :c | 
+							c state = Color paleYellow
+								ifTrue: [ c state: Color green.
+									c color: Color green ] ].
+					^ false ].	"You win!'"
 			^ true ].
 	^ false
 ]
@@ -153,7 +159,7 @@ C4Game >> initialize [
 	cells:=Array2D  rows:rows columns:cols tabulate:[:i :j | self newCellAt: i at: j ].
 	board:=Array2D  rows:rows columns:cols tabulate:[:i :j | 0]."element:0."
 	self openInWindowLabeled: 'Connect Four'.
-	self halt.
+
 ]
 
 { #category : #GameLogic }
