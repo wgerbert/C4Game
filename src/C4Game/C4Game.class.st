@@ -216,15 +216,16 @@ C4Game >> moveValueAt: col [
 
 { #category : #GameLogic }
 C4Game >> newCellAt: row at: col [
-"create a new cell at (i,j) "
-| c origin |
-	c:= C4Cell new.
-	origin:= self innerBounds origin .
-	self  addMorph: c.
-	c position:((col-1)*c width)@((6-row)*c height )+origin.
-	c mouseAction:  [ (self dropChipAt: col State:self player Val:playerVal) 
-			ifTrue: [self switch]].
-	^c.
+	"create a new cell at (i,j) "
+
+	| c origin |
+	c := C4Cell new.
+	origin := self innerBounds origin.
+	self addMorph: c.
+	c position: ((col - 1) * c width) @ ((6 - row) * c height) + origin.
+	c mouseAction: [ (self dropChipAt: col State: self player Val: playerVal)
+				ifTrue: [ self switch ] ].
+	^ c
 ]
 
 { #category : #accessing }
@@ -315,7 +316,7 @@ C4Game >> uncertainRevenue: anObject [
 
 { #category : #GameLogic }
 C4Game >> undoMove:col [
-" Zug zurücknehmen"
+" undo the last move"
  |row |
 
 row:=6.
