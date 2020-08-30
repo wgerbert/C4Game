@@ -37,7 +37,7 @@ win=1 ifTrue:[^(loseRevenue / (maxDepth - depth +1)) ]."Player will win"
 win=playerVal ifTrue:[^(winRevenue / (maxDepth - depth +1)) ]  ."AI will win"
 depth=0 ifTrue:[^uncertainRevenue ]."No idea"
 a:=alpha .b:=beta.
-maxp  ifTrue:[ (1 to: 7 do:[:col| (self makeMoveAI: col)  
+maxp  ifTrue:[ (1 to: 7 do:[:col| (self simulateMove: col player:2)  
 		ifTrue: [ a:= self alphabetaDepth:(depth-1)  alpha:a  beta:b  maximizePlayer:false.
 				a := alpha max:a.
 				self undoMove: col.
@@ -45,7 +45,7 @@ maxp  ifTrue:[ (1 to: 7 do:[:col| (self makeMoveAI: col)
 			  ].
 		]).
 	^a]
-ifFalse:[(1 to: 7 do:[:col| (self makeMovePlayer: col) 
+ifFalse:[(1 to: 7 do:[:col| (self simulateMove: col player:1) 
 		ifTrue: [ b:=self alphabetaDepth:(depth-1)  alpha:a beta:b  maximizePlayer:true.
 				b := beta min:b.
 				self undoMove: col.
@@ -187,33 +187,6 @@ C4Game >> loseRevenue: anObject [
 ]
 
 { #category : #GameLogic }
-C4Game >> makeMoveAI:col [
-"simulate AI"
- |row |
-
-row:=1.
-
-[(board at:row at:col)=0 or: row>5]
-	whileFalse: [ row:=row+1].
-
-(board at:row at:col)=0 ifTrue: [board at:row at:col put:2.^true ].
-^false.
-]
-
-{ #category : #GameLogic }
-C4Game >> makeMovePlayer:col [
-	"simulate player"
- |row |
-
-row:=1.
-[(board at:row at:col)=0 or: row>5]
-	whileFalse: [ row:=row+1].
-
-(board at:row at:col)=0 ifTrue: [board at:row at:col put:1.^true ].
-^false.
-]
-
-{ #category : #GameLogic }
 C4Game >> makeTurnAI [
 "AI Turn"
 	|maxVal move sum|
@@ -253,12 +226,12 @@ C4Game >> moveValueAt: col [
 	win:=self getWinner.
 	win=2 ifTrue:[^1].
 "Check if oponent wins in the next move"
-	self makeMovePlayer: col.
+	self simulateMove: col player:1.
 	win:=self getWinner.
 	self undoMove: col.
 	win=1 ifTrue:[^-1].
 "Start own try"	
-	self makeMoveAI: col.
+	self simulateMove: col player:2.
 	val:=self alphabetaDepth:8 alpha: (-111) beta: (111) maximizePlayer:false.
 	self undoMove: col.
 	^val.
@@ -328,6 +301,20 @@ ret:=cnt.
 b:=board at:v at:u ifInvalid:0. 
 (b=val) ifTrue:[ret:=self searchNext:val col:u row:v x:x y:y count:(cnt+1)].
 ^ret.
+]
+
+{ #category : #GameLogic }
+C4Game >> simulateMove:col player:playval [
+"simulate AI"
+ |row |
+
+row:=1.
+
+[(board at:row at:col)=0 or: row>5]
+	whileFalse: [ row:=row+1].
+
+(board at:row at:col)=0 ifTrue: [board at:row at:col put:playval.^true ].
+^false.
 ]
 
 { #category : #GameLogic }
