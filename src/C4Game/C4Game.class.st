@@ -81,29 +81,6 @@ C4Game >> cells: anObject [
 ]
 
 { #category : #GameLogic }
-C4Game >> dropChipAt: col [
-	"drops a chip in the board"
-
-	| row cell win |
-	row := 1.
-	cell := cells at: row at: col.
-	[ cell state = Color paleYellow or: row > 5 ]
-		whileFalse: [ row := row + 1.
-			cell := cells at: row at: col ].
-	cell state = Color paleYellow
-		ifTrue: [ cell color: player.
-			cell state: player.
-			board at: row at: col put: playerVal.
-			win := self getWinner.
-			win = 2
-				ifTrue: [ self owner setLabel:'I win'.cells do:[:c|c state = Color paleYellow ifTrue:[c state:Color green.c color:Color green ]] ].
-			win = 1
-				ifTrue: [  ].
-			^ true ].
-	^ false
-]
-
-{ #category : #GameLogic }
 C4Game >> dropChipAt: col State: state Val: val [
 	"drops a chip in the board"
 
@@ -119,7 +96,7 @@ C4Game >> dropChipAt: col State: state Val: val [
 			board at: row at: col put: val.
 			win := self getWinner.
 			win = 2
-				ifTrue: [  ].	"I win"
+				ifTrue: [ self owner setLabel:'I win'.cells do:[:c|c state = Color paleYellow ifTrue:[c state:Color purple .c color:Color cyan ]] ].	"I win"
 			win = 1
 				ifTrue: [ self owner setLabel: 'You win!'.
 					cells
@@ -201,7 +178,7 @@ C4Game >> makeTurnAI [
 			].
 	] valueWithExit .
 	sum=0 ifTrue:[move:=(5 atRandom +1)].
-	self dropChipAt: move. 
+	self dropChipAt: move State:Color blue  Val: 2. 
       ^move
 
 ]
