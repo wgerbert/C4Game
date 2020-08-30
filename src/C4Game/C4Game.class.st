@@ -33,9 +33,9 @@ C4Game >> alphabetaDepth:depth alpha:alpha beta:beta maximizePlayer:maxp [
 "Alphabeta"
 | win a b|
 win:=self getWinner.
-win=1 ifTrue:[^(loseRevenue / (maxDepth - depth +1)) ]."Spieler gewinnt"
-win=playerVal ifTrue:[^(winRevenue / (maxDepth - depth +1)) ]  ."KI Gewinnt"
-depth=0 ifTrue:[^uncertainRevenue ].
+win=1 ifTrue:[^(loseRevenue / (maxDepth - depth +1)) ]."Player will win"
+win=playerVal ifTrue:[^(winRevenue / (maxDepth - depth +1)) ]  ."AI will win"
+depth=0 ifTrue:[^uncertainRevenue ]."No idea"
 a:=alpha .b:=beta.
 maxp  ifTrue:[ (1 to: 7 do:[:col| (self makeMoveAI: col)  
 		ifTrue: [ a:= self alphabetaDepth:(depth-1)  alpha:a  beta:b  maximizePlayer:false.
@@ -134,6 +134,7 @@ C4Game >> dropChipAt: col State: state Val: val [
 
 { #category : #GameLogic }
 C4Game >> getWinner [
+"Returns winner if found"
 |winner val|
 winner:=0.
 (1 to: 7 do:[:col| 1 to:6 do:[ :row|val:=self searchChainAt:col at: row. (val>winner) ifTrue:[^val]]]).
@@ -187,7 +188,7 @@ C4Game >> loseRevenue: anObject [
 
 { #category : #GameLogic }
 C4Game >> makeMoveAI:col [
-"KIZug simulieren"
+"simulate AI"
  |row |
 
 row:=1.
@@ -201,7 +202,7 @@ row:=1.
 
 { #category : #GameLogic }
 C4Game >> makeMovePlayer:col [
-	"comment stating purpose of message"
+	"simulate player"
  |row |
 
 row:=1.
@@ -214,7 +215,7 @@ row:=1.
 
 { #category : #GameLogic }
 C4Game >> makeTurnAI [
-"Die KI ist am Zug"
+"AI Turn"
 	|maxVal move sum|
 
 	maxVal:=-222.sum:=0.
@@ -246,14 +247,17 @@ C4Game >> maxDepth: anObject [
 
 { #category : #GameLogic }
 C4Game >> moveValueAt: col [
-"Wert des Zuges ermitteln"
+"Get value of the move"
 	|val win|
-"Zunächst prüfen, ob der Gegner mit dem nächsten Zug gewinnt"
+"Did AI already win?"
+	win:=self getWinner.
+	win=2 ifTrue:[^1].
+"Check if oponent wins in the next move"
 	self makeMovePlayer: col.
 	win:=self getWinner.
 	self undoMove: col.
 	win=1 ifTrue:[^-1].
-"Eigenen versuch starten"	
+"Start own try"	
 	self makeMoveAI: col.
 	val:=self alphabetaDepth:8 alpha: (-111) beta: (111) maximizePlayer:false.
 	self undoMove: col.
@@ -301,7 +305,7 @@ C4Game >> playerVal: anObject [
 C4Game >> searchChainAt:col at: row [
 |val|
 val:=board at:row at:col.
-val=0 ifTrue:[^0].
+val=0 ifTrue:[^0]."No val to begin with"
 
 "search Up"
 	(row<4) ifTrue:[(self searchNext:val col:col row:row x:0 y:1 count:1) >3 ifTrue:[.^val]].
@@ -316,6 +320,7 @@ val=0 ifTrue:[^0].
 
 { #category : #GameLogic }
 C4Game >> searchNext:val col:col row:row x:x y:y count:cnt [
+"searches the next chip in the given direction" 
 |b u v ret|
 u:=col+x.
 v:=row+y.
@@ -327,7 +332,7 @@ b:=board at:v at:u ifInvalid:0.
 
 { #category : #GameLogic }
 C4Game >> switch [
-"Sielerwechsel"
+"switch player"
 (player=Color red) ifTrue: [ player:=Color blue.playerVal:=2.self makeTurnAI.self switch ]
 					ifFalse:[player :=Color red.playerVal:=1 ].
 ]
