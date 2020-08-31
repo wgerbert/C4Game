@@ -10,7 +10,7 @@ start:
 
 ```
 Metacello new
-  baseline: 'BaselineOfC4Game';
+  baseline: 'C4Game';
   repository: 'github://wgerbert/C4Game/src' ;
   load.
 ```
