@@ -120,24 +120,29 @@ winner:=0.
 
 { #category : #initialization }
 C4Game >> initialize [
-|sampleCell width height rows cols |
+	| sampleCell width height rows cols |
 	super initialize.
-	player:=Color red.
-	playerVal:=1.
-	rows:=6.
-	cols:=7.
-	winRevenue :=1.
-	loseRevenue :=-1.
-	uncertainRevenue :=0.
-	maxDepth :=8.
-	sampleCell:=C4Cell  new.
-	width :=sampleCell width .
-	height := sampleCell height .
-	self bounds: (5@5 extent: ((width*cols)@(height *rows))+(2*self borderWidth )).
-	cells:=Array2D  rows:rows columns:cols tabulate:[:i :j | self newCellAt: i at: j ].
-	board:=Array2D  rows:rows columns:cols tabulate:[:i :j | 0]."element:0."
-	self openInWindowLabeled: 'Connect Four'.
-
+	player := Color red.
+	playerVal := 1.
+	rows := 6.
+	cols := 7.
+	winRevenue := 1.
+	loseRevenue := -1.
+	uncertainRevenue := 0.
+	maxDepth := 8.
+	sampleCell := C4Cell new.
+	width := sampleCell width.
+	height := sampleCell height.
+	self
+		bounds:
+			(5 @ 5
+				extent: (width * cols) @ (height * rows) + (2 * self borderWidth)).
+	cells := Array2D
+		rows: rows
+		columns: cols
+		tabulate: [ :i :j | self newCellAt: i at: j ].
+	board := Array2D rows: rows columns: cols tabulate: [ :i :j | 0 ].	"element:0."
+	self openInWindowLabeled: 'Connect Four'
 ]
 
 { #category : #GameLogic }
@@ -197,21 +202,28 @@ C4Game >> maxDepth: anObject [
 
 { #category : #GameLogic }
 C4Game >> moveValueAt: col [
-"Get value of the move"
-	|val win|
-"Did AI already win?"
-	win:=self getWinner.
-	win=2 ifTrue:[^1].
-"Check if oponent wins in the next move"
-	self simulateMove: col player:1.
-	win:=self getWinner.
+	"Get value of the move"
+
+	| val win |
+	"Did AI already win?"
+	win := self getWinner.
+	win = 2
+		ifTrue: [ ^ 1 ].
+	"Check if oponent wins in the next move"
+	self simulateMove: col player: 1.
+	win := self getWinner.
 	self undoMove: col.
-	win=1 ifTrue:[^-1].
-"Start own try"	
-	self simulateMove: col player:2.
-	val:=self alphabetaDepth:8 alpha: (-111) beta: (111) maximizePlayer:false.
+	win = 1
+		ifTrue: [ ^ -1 ].
+	"Start own try"
+	self simulateMove: col player: 2.
+	val := self
+		alphabetaDepth: maxDepth 
+		alpha: -111
+		beta: 111
+		maximizePlayer: false.
 	self undoMove: col.
-	^val.
+	^ val
 ]
 
 { #category : #GameLogic }
