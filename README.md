@@ -4,7 +4,7 @@ Connect Four Game
 Little Connect Four board game implementation of alpha beta .
 You can play against the computer.
 
-start:
+start playing and just click into a column:
 
 ``` C4Game new```
 
