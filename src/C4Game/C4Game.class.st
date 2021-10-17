@@ -96,7 +96,7 @@ C4Game >> dropChipAt: col State: state Val: val [
 			board at: row at: col put: val.
 			win := self getWinner.
 			win = 2
-				ifTrue: [ self owner setLabel:'I win'.cells do:[:c|c state = Color paleYellow ifTrue:[c state:Color purple .c color:Color cyan ]] ].	"I win"
+				ifTrue: [ self owner setLabel:'I win!'.cells do:[:c|c state = Color paleYellow ifTrue:[c state:Color purple .c color:Color cyan ]] ].	"I win"
 			win = 1
 				ifTrue: [ self owner setLabel: 'You win!'.
 					cells
