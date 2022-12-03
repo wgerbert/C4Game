@@ -10,5 +10,5 @@ Class {
 { #category : #baselines }
 BaselineOfC4Game >> baseline: spec [
 	<baseline>
-	spec for: #common do: [ spec package: 'C4Game'. spec group: 'default' with: #('C4Game')]
+	spec for: #common do: [ spec package: 'GtC4Game'. spec group: 'default' with: #('GtC4Game')]
 ]
